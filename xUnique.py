@@ -198,7 +198,7 @@ Please check:
 
     def substitute_old_keys(self):
         self.vprint('replace UUIDs and remove unused UUIDs')
-        key_ptn = re_compile('(?<=\s)([0-9A-Z]{24}|[0-9A-F]{32})(?=[\s;])')
+        key_ptn = re_compile(r'(?<=\s)([0-9A-Z]{24}|[0-9A-F]{32})(?=[\s;])')
         removed_lines = []
         for line in fi_input(self.xcode_pbxproj_path, backup='.ubak', inplace=1):
             # project.pbxproj is an utf-8 encoded file
@@ -242,15 +242,15 @@ Please check:
         self.vprint('sort project.xpbproj file')
         lines = []
         removed_lines = []
-        files_start_ptn = re_compile('^(\s*)files = \(\s*$')
-        files_key_ptn = re_compile('((?<=[A-Z0-9]{24} \/\* )|(?<=[A-F0-9]{32} \/\* )).+?(?= in )')
-        fc_end_ptn = '\);'
+        files_start_ptn = re_compile(r'^(\s*)files = \(\s*$')
+        files_key_ptn = re_compile(r'((?<=[A-Z0-9]{24} \/\* )|(?<=[A-F0-9]{32} \/\* )).+?(?= in )')
+        fc_end_ptn = r'\);'
         files_flag = False
-        children_start_ptn = re_compile('^(\s*)children = \(\s*$')
-        children_pbx_key_ptn = re_compile('((?<=[A-Z0-9]{24} \/\* )|(?<=[A-F0-9]{32} \/\* )).+?(?= \*\/)')
+        children_start_ptn = re_compile(r'^(\s*)children = \(\s*$')
+        children_pbx_key_ptn = re_compile(r'((?<=[A-Z0-9]{24} \/\* )|(?<=[A-F0-9]{32} \/\* )).+?(?= \*\/)')
         child_flag = False
         pbx_start_ptn = re_compile('^.*Begin (PBXBuildFile|PBXFileReference) section.*$')
-        pbx_key_ptn = re_compile('^\s+(([A-Z0-9]{24})|([A-F0-9]{32}))(?= \/\*)')
+        pbx_key_ptn = re_compile(r'^\s+(([A-Z0-9]{24})|([A-F0-9]{32}))(?= \/\*)')
         pbx_end_ptn = ('^.*End ', ' section.*$')
         pbx_flag = False
         last_two = deque([])
@@ -279,7 +279,7 @@ Please check:
                         output_u8line(''.join(lines))
                         lines = []
                     files_flag = False
-                    fc_end_ptn = '\);'
+                    fc_end_ptn = r'\);'
                 elif files_key_ptn.search(line):
                     if line in lines:
                         removed_lines.append(line)
@@ -300,7 +300,7 @@ Please check:
                         output_u8line(''.join(lines))
                         lines = []
                     child_flag = False
-                    fc_end_ptn = '\);'
+                    fc_end_ptn = r'\);'
                 elif children_pbx_key_ptn.search(line):
                     if line in lines:
                         removed_lines.append(line)
